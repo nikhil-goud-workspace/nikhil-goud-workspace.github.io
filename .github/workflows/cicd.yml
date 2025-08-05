@@ -1,0 +1,36 @@
+name: Deploy to S3
+
+on:
+  push:
+    branches:
+      - master  # Trigger on pushes to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'  # Specify your required Node.js version
+
+    - name: Install Dependencies
+      run: |
+        npm install
+    
+    - name: Fix Dependencies
+      run: |
+        npm audit fix --force  # Fix vulnerabilities if possible
+
+    - name: Fix Deprecated Warnings (Optional, based on your needs)
+      run: |
+        npm install --save-dev @babel/plugin-proposal-private-property-in-object
+        # Add other necessary fixes for deprecated packages here
+
+    - name: Build the Project
+      run: |
+        npm run build
